@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="refresh" content="100">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'home/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/6a62f01b8c.js" crossorigin="anonymous"></script>
+    <script src="{% static 'home/script.js' %}"></script>
+
+    <title>История запросов</title>
+</head>
+
+<body>
+    <header>
+        <h1>История запросов</h1>
+    </header>
+    <div class="table-block">
+        <table class="table" >
+            {% if hist_s.count > 0 %}
+            <tr>
+                <th>Удалить <br>запрос</th>
+                <th>№ Запроса</th>
+                <th>Дата запроса</th>
+                <th>Дата с</th>
+                <th>Дата по</th>
+                <th>Сайты</th>
+                <th>Набор ключевых слов</th>
+                <th>Результат запроса</th>
+            </tr>
+                {% for hist in hist_s %}
+                    <tr id = "{{hist.uid}}">
+                        {% for name in hist.links.all %}
+                            <td><a class = "del" href="{% url 'delete' name.pk %}">&times;</a></td>
+                            <td>{{name.uid}}</td>
+                            <td>{{name.created_at}}</td>
+                            <td>{{name.date_ot}}</td>
+                            <td>{{name.date_do}}</td>
+                            <td>{{name.sites}}</td>
+                            <td>{{hist.type}}
+                            <a class="down" href="{% url 'download' name.pk 'word_result' %}" download>Скачать</a></td>
+                            {% if name.result_text == 'Loading' %}
+                                <td>
+
+                                <div id="container">
+                                    <div id="progress_bar" class="ui-progress-bar ui-container">
+                                        <div class="ui-progress" style="width: 7%;">
+                                        </div><!-- .ui-progress -->
+                                    </div>
+                                </div>
+
+
+                                </td>
+                            {% elif name.result_text == 'Success' %}
+                            <td><a class="down" href="{% url 'download' name.pk 'result' %}" download>Скачать файл</a></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+
+            {% endif %}
+        </table>
+    </div>
+    <div class="history_button">
+        <button class="history_button_return" onclick="location.href='{% url 'restart'%}?id=' + document.querySelector('tr[class=active]').id + '&typ=парсинг'" > Повторить запрос</button>
+        <button class="history_button_back" onclick="location.href='{% url 'account' %}'">Вернуться</button>
+    </div>
+</body>
+<script src="{% static 'home/progress.js' %}"></script>
+<script src="{% static 'home/script.js' %}"></script>
+<script src="https://snipp.ru/cdn/jquery/2.1.1/jquery.min.js"></script>
+</html>

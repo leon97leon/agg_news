@@ -1,0 +1,123 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'home/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'home/script.js' %}"></script>
+    <title>Добро пожаловать!</title>
+</head>
+
+<body>
+    <header>
+        <h1>Новостной агрегатор ООЭ</h1>
+
+    </header>
+    <div class="authorization">
+
+        <p>Добро пожаловать!<br> Если Вы сотрудник СВА, введите логин и пароль:</p>
+        <a href="#authorization" name="modal"><button>Войти</button></a>
+
+    </div>
+    <div id="boxes">
+        <div id="authorization" class="window">
+            <div class="close"><a href="#">&times;</a></div>
+
+            <div class="modal-body">
+                <h3>Данные для входа</h3>
+                <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                    <p>Электронная почта (личная):</p>
+                    <input name= 'username' type="username" required>
+                    <p>Пароль:</p>
+                    <input name = 'password' type="password" required>
+                    <input type="submit" name="submit" value="Отправить">
+
+                </form>
+            </div>
+        </div>
+        <div id="back"></div>
+    </div>
+
+    <div class="registration">
+        <p>Первый раз на сайте? Забыли пароль?<br>Получите доступ/восстановите пароль:</p>
+        <a href="#registration" name="modal"><button>Получить доступ</button></a>
+    </div>
+    {% block content %}{% endblock %}
+    {% if messages %}
+        {% for message in messages %}
+            <div id="boxes">
+                    <div id = "message" class="window" style="display: block">
+                        <div class="close"><a href="#">&times;</a></div>
+                        <div class="modal-body">
+                            {{ message }}
+                        </div>
+                    </div>
+                <div id="back" style="display: block"></div>
+            </div>
+        {% endfor %}
+        <script>mes()</script>
+    {% endif %}
+    <div id="boxes">
+        <div id="registration" class="window">
+            <div class="close"><a href="#">&times;</a></div>
+            <div class="modal-body">
+                <h3 style="text-align: start;">Заполните поля:</h3>
+                <form method="POST" action="{% url 'user-create' %}">
+                    {% csrf_token %}
+                   
+                    <div class="select_tb">
+
+                        <p>Имя ТБ</p>
+                        <select size="1" class="select" name="bank">
+
+                            <option value="ЦА">ЦА</option>
+                            <option value="ЦА">ЦА</option>
+                            <option value="ББ">ББ</option>
+                            <option value="ВВБ">ВВБ</option>
+                            <option value="ДВБ">ДВБ</option>
+                            <option value="МБ">МБ</option>
+                            <option value="ПБ">ПБ</option>
+                            <option value="СЗБ">СЗБ</option>
+                            <option value="СиББ">СиББ</option>
+                            <option value="СРБ">СРБ</option>
+                            <option value="УБ">УБ</option>
+                            <option value="ЮЗБ">ЮЗБ</option>
+                            <option value="ЦЧБ">ЦЧБ</option>
+                        </select>
+                    </div>
+                    <div class="name">
+                        <p>ФИО</p>
+                        <input type="text" name="fio" required>
+
+                    </div>
+                    <p>Электронная почта (личная)</p>
+                    <input type="email" name = 'email' required>
+                    <p>Комментарий (при необходимости)</p>
+                    <input type="text" name="comment">
+                    <input type="submit" name="submit" value="Отправить">
+
+                </form>
+
+            </div>
+
+        </div>
+        <div id="back"></div>
+    </div>
+</body>
+
+<script src="{% static 'home/script.js' %}"></script>
+
+
+
+</html>

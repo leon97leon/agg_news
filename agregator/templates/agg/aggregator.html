@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'home/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/6a62f01b8c.js" crossorigin="anonymous"></script>
+    <script src="{% static 'home/script.js' %}"></script>
+
+    <title>Новостной агрегатор ООЭ</title>
+</head>
+
+<body>
+    {% if user.is_authenticated %}
+    <header>
+        <div class="header_link">
+            <a class="instruction" >Инструкция</a>
+<p>|</p>
+<!-- {#                < class="history" href="history.html">История запросов</>#} -->
+            <a class="account" href="{% url 'account' %}">Личный кабинет</a>
+            <p>|</p>
+
+            <a class="exit" href="{% url 'logout' %}" >Выход</a>
+{#                    <a class="account modal" name="modal" href="#account">Личный кабинет пользователя</a>#}
+
+        </div>
+        <h1>Новостной агрегатор ООЭ</h1>
+
+    </header>
+        {% if messages %}
+            {% for message in messages %}
+                <div id="boxes">
+                        <div id = "message" class="window" style="display: block">
+                            <div class="close"><a href="#">&times;</a></div>
+                            <div class="modal-body">
+                                {{ message }}
+                            </div>
+                        </div>
+                    <div id="back" style="display: block"></div>
+                </div>
+            {% endfor %}
+            <script>mes()</script>
+        {% endif %}
+        <form class="search" method='POST' action="{% url 'task' %}" enctype ="multipart/form-data">
+        {% csrf_token %}
+            <div class="search_parametrs">
+                <div class="search_parametrs_period">
+                    <p><b>Период:</b></p>
+                    <p>c</p>
+                    <input name="date1" type="date" value="{{ date_from }}" id="date1">
+                    <p>по</p>
+                    <input name="date2" type="date" value="{{ date_do }}" id="date2">
+
+                </div>
+                <div class="search_parametrs_site">
+                    <p><b>Сайты:</b></p> 
+<input type="checkbox" class="check_style all" style="margin-bottom: 50px;" id="0" data-id="d1" name="all"><label for="0">Выбрать все сайты</label>
+
+                    <input  name="site1" type="checkbox" id="1" data-id="d1" class="check_style one"  {% if 'consultant.ru' in sites %}checked="checked"{% endif %} value="consultant.ru"><label for="1">
+                        1. www.consultant.ru</label>
+                    <input name="site2" type="checkbox" id="2" data-id="d1" class="check_style one" {% if 'gaap.ru' in sites %}checked="checked"{% endif %} value="gaap.ru"><label for="2">
+                        2. www.gaap.ru</label>
+                    <input  name="site3" type="checkbox" id="3" data-id="d1" class="check_style one" {% if 'rbc.ru' in sites %}checked="checked"{% endif %} value="rbc.ru"><label for="3">
+                        3. www.rbc.ru</label>
+                    <input name="site4" type="checkbox" id="4" data-id="d1" class="check_style one" {% if 'minfin.gov.ru' in sites %}checked="checked"{% endif %} value="minfin.gov.ru"><label for="4">
+                        4. www.minfin.gov.ru</label>
+                    <input  name="site5" type="checkbox" id="5" data-id="d1" class="check_style one" {% if 'sroaas.ru' in sites %}checked="checked"{% endif %} value="sroaas.ru"><label for="5">
+                        5. www.sroaas.ru</label>
+                    <input  name="site6" type="checkbox" id="6" data-id="d1" class="check_style one" {% if 'iia-ru.ru' in sites %}checked="checked"{% endif %} value="iia-ru.ru"><label for="6">
+                        6. www.iia-ru.ru</label>
+                    <input  name="site7" type="checkbox" id="7" data-id="d1" class="check_style one" {% if 'cbr.ru' in sites %}checked="checked"{% endif %} value="cbr.ru"><label for="7">
+                        7. www.cbr.ru</label>
+                    <input  name="site8" type="checkbox" id="8" data-id="d1" class="check_style one" {% if 'audit-it.ru' in sites %}checked="checked"{% endif %} value="audit-it.ru"><label for="8">
+                        8. www.audit-it.ru</label>
+                    <br>
+                    <input  name="site9" type="checkbox" id="9" class="check_style one" {% if 'Глобальный поиск' in sites %}checked="checked"{% endif %} value="Глобальный поиск"><label for="9">
+                        Глобальный поиск</label>
+                        <a class="checked_false">Сбросить выбранное</a>
+
+
+                </div>
+                <div class="search_parametrs_loading">
+                    <div class="search_parametrs_loading_keywords">
+                        <p>Загрузить ключевые слова:</p>
+                        {% if file_word %}<input name="file_word_restart" type="text" value="{{ file_word }}" id="file_word_restart" style="display: none">{% endif %}
+                        <input type="file" class="input__file" id="input_keywords" name="file_word" accept=".xls,.xlsx,.txt,.csv">
+                        <label class="input__file-button" for="input_keywords">
+                            <span class="input__file-button-text" id="sep" style="z-index:444"> {% if file_word %}Выбраны ключевые слова из истории {% endif %}</span>
+                            <input name="file_word_sep" style="height:95%;border:none; font-size: 15px;z-index:222{% if file_word %};display: none{% endif %}" type="text" value="" id="file_word_sep" placeholder="Введите слова через запятую">
+                            <img src="{% static 'image/file.png' %}" class="input__file-icon-wrapper" alt="">
+
+                        </label>
+
+                    </div>
+                    <p class="or_style">ИЛИ</p>
+                    <div class="search_parametrs_loading_ml-model">
+                        <p>Загрузить файлы для ML-модели:</p>
+                        <p>Реестр статей:</p>
+                        {% if file_state %}<input name="file_ml_reestr_restart" type="text" value="{{ file_state }}" id="file_ml_reestr_restart" style="display: none">{% endif %}
+                        {% if file_word_model %}<input name="file_ml_restart" type="text" value="{{ file_word_model }}" id="file_ml_restart" style="display: none">{% endif %}
+                        <input type="file" id="input_ml-model_reestr" accept=".xls,.xlsx" name="file_ml_reestr" class="input__file">
+                        <label class="input__file-button" for="input_ml-model_reestr" >
+                            <span class="input__file-button-text">{% if file_state %}Выбран реестр из истории{% elif file_word_model %} Выбран результат модели из истории {% endif %}</span>
+
+                            <span>
+                                <img src="{% static 'image/file.png' %}" class="input__file-icon-wrapper" alt="">
+                            </span>
+                        </label>
+                        <p>Zip архив статей:</p>
+                        {% if file_archive %}<input name="file_ml_state_restart" type="text" value="{{ file_archive }}" id="file_ml_state_restart" style="display: none">{% endif %}
+                        <input type="file" id="input_ml-model_state" accept=".zip" name="file_ml_state" class="input__file">
+                        <label class="input__file-button" for="input_ml-model_state" >
+                            <span class="input__file-button-text"> {% if file_archive %}Выбран архив из истории {% endif %}</span>
+
+                            <span>
+                                <img src="{% static 'image/file.png' %}" class="input__file-icon-wrapper" alt="">
+                            </span>
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+            <div class="button-block">
+                <input type="submit" value="Запустить поиск">
+
+            </div>
+        </form>
+
+    {% endif %}
+
+</body>
+<script src="{% static 'home/script.js' %}"></script>
+</html>

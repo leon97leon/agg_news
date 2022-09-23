@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'home/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'home/script.js' %}"></script>
+    <title>Личный кабинет</title>
+</head>
+<body>
+    <header>
+        <h1>Личный кабинет</h1>
+    </header>
+    <div class="page_account">
+        <a class="page_account_button modal" name="modal" href="#account">Изменить личные данные</a>
+        <a class="page_account_button" href="{% url 'history' %}">История запросов</a>
+        <a class="page_account_button" href="{% url 'history_keys' %}">История ключевых слов</a>
+
+    </div>
+    {% if messages %}
+            {% for message in messages %}
+                <div id="boxes">
+                        <div id = "message" class="window" style="display: block">
+                            <div class="close"><a href="#">&times;</a></div>
+                            <div class="modal-body">
+                                {{ message }}
+                            </div>
+                        </div>
+                    <div id="back" style="display: block"></div>
+                </div>
+            {% endfor %}
+            <script>mes()</script>
+        {% endif %}
+        <div id="boxes">
+            <div id="account" class="window">
+                <div class="close"><a href="#">&times;</a></div>
+                <div class="modal-body">
+                    <h3 style="text-align: start;">Заполните поля:</h3>
+                    <form method='POST' action="{% url 'update_email' %}">
+                        {% csrf_token %}
+                        <div class="name">
+                            <p>ФИО</p>
+                            <input type="text" disabled value="{{ user.profile.fio }}" required>
+
+                        </div>
+                        <div class="select_tb">
+
+                            <p>Имя ТБ</p>
+                            <select size="1" class="select" disabled value = {{ user.profile.bank }} name="bank">
+
+                                <option value="ЦА"{% if user.profile.bank == "ЦА" %} selected="selected"{% endif %}>ЦА</option>
+                                <option value="ББ"{% if user.profile.bank == "ББ" %} selected="selected"{% endif %}>ББ</option>
+                                <option value="ВВБ"{% if user.profile.bank == "ВВБ" %} selected="selected"{% endif %}>ВВБ</option>
+                                <option value="ДВБ"{% if user.profile.bank == "ДВБ" %} selected="selected"{% endif %}>ДВБ</option>
+                                <option value="МБ"{% if user.profile.bank == "МБ" %} selected="selected"{% endif %}>МБ</option>
+                                <option value="ПБ"{% if user.profile.bank == "ПБ" %} selected="selected"{% endif %}>ПБ</option>
+                                <option value="СЗБ"{% if user.profile.bank == "СЗБ" %} selected="selected"{% endif %}>СЗБ</option>
+                                <option value="СиББ"{% if user.profile.bank == "СиББ" %} selected="selected"{% endif %}>СиББ</option>
+                                <option value="СРБ"{% if user.profile.bank == "СРБ" %} selected="selected"{% endif %}>СРБ</option>
+                                <option value="УБ"{% if user.profile.bank == "УБ" %} selected="selected"{% endif %}>УБ</option>
+                                <option value="ЮЗБ" {% if user.profile.bank == "ЮЗБ" %} selected="selected"{% endif %}>ЮЗБ</option>
+                                <option value="ЦЧБ"{% if user.profile.bank == "ЦЧБ" %} selected="selected"{% endif %}>ЦЧБ</option>
+                            </select>
+                        </div>
+                        <p>Электронная почта</p>
+                        <input type="email" name="username" value = "{{ user.username }}" required>
+                        <p>Изменить пароль</p>
+                        <input type="password" name="password">
+                        <p>Подтвердите пароль:</p>
+                        <input type="password" name="password1">
+                        <input type="submit" name="submit" value="Сохранить">
+
+                    </form>
+
+                </div>
+
+            </div>
+            <div id="back"></div>
+        </div>
+        <div class="account_button">
+            <button class="account_button_back" onclick="location.href='{% url 'agregator' %}'">Вернуться</button>
+        </div>
+    </div>
+</body>
+<script src="{% static 'home/script.js' %}"></script>
+
+</html>
